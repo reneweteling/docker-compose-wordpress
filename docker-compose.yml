@@ -1,0 +1,32 @@
+version: "3.3"
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - "3310:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      LOCAL: "true"
+      DB_HOST: db:3306
+      DB_USER: wordpress
+      DB_PASSWORD: wordpress
+      DB_NAME: wordpress
